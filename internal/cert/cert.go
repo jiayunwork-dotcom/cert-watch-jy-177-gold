@@ -85,6 +85,8 @@ func LoadCert(path string, warnDays int) (CertInfo, error) {
 	now := time.Now()
 	info.DaysLeft = int(c.NotAfter.Sub(now).Hours() / 24)
 	switch {
+	case c.NotAfter.Before(now):
+		info.Status = StatusExpired
 	case info.DaysLeft <= warnDays:
 		info.Status = StatusWarn
 	default:
